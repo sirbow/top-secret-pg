@@ -11,7 +11,7 @@
             background-color: black;
             color: #00ff00;
             font-family: 'Courier New', Courier, monospace;
-            display: block; /* Change from flex to block to allow scrolling */
+            display: block;
             min-height: 100vh;
             box-sizing: border-box;
             overflow-y: auto; /* Allow vertical scrolling */
@@ -20,7 +20,7 @@
             white-space: pre-wrap;
             overflow-wrap: break-word;
             max-width: 100%;
-            display: none;
+            display: block; /* Ensure the output is visible */
         }
         .cursor {
             display: inline-block;
@@ -44,7 +44,7 @@
 <body>
     <div id="introMessage">This is a top-secret message - press play to proceed</div>
     <audio id="backgroundAudio" controls>
-        <source src="pink-panther-6836.mp3" type="audio/mpeg">
+        <source src="ping-panther-6836.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
     <div id="output"></div>
@@ -107,6 +107,8 @@ I'm just kidding, can't wait to see you there!
                     document.getElementById('output').innerText += text[index];
                     index++;
                     setTimeout(type, interval);
+                } else {
+                    document.querySelector('.cursor').style.display = 'none'; // Hide cursor after typing
                 }
             }
             type();
