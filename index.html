@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Agent Echo's Mission</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: black;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        #output {
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            max-width: 100%;
+            display: none;
+        }
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background-color: #00ff00;
+            animation: blink 1s step-end infinite;
+        }
+        #introMessage {
+            text-align: center;
+            font-size: 1.5rem;
+            padding: 20px;
+        }
+        #backgroundAudio {
+            display: block;
+            margin-top: 10px;
+        }
+        @keyframes blink {
+            from, to { background-color: transparent; }
+            50% { background-color: #00ff00; }
+        }
+    </style>
+</head>
+<body>
+    <div id="introMessage">This is a top-secret message - press play to proceed</div>
+    <audio id="backgroundAudio" controls>
+        <source src="pink-panther-6836.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <div id="output"></div>
+    <div class="cursor"></div>
+
+    <script>
+        const audio = document.getElementById('backgroundAudio');
+        const introMessage = document.getElementById('introMessage');
+        const output = document.getElementById('output');
+        const audioControls = document.getElementById('backgroundAudio');
+
+        audio.onplay = function() {
+            introMessage.style.display = 'none';
+            audioControls.style.display = 'none';
+            output.style.display = 'block';
+            startTyping();
+        };
+
+        const text = `🕵️ Secret Agent Mission: 🕵️‍♀ Forgotten Temple
+
+Attention, Young Agent
+
+You’re invited to a top-secret mission.
+
+Join us for an action-packed adventure where you’ll solve puzzles, crack codes, and work together to escape!
+
+**Mission Briefing**:
+Location: Mindgame Escape Umhlanga, 16 Chartwell Drive, Umhlanga
+Date & Time: 7th December at 3pm
+
+After our daring escape, we’ll celebrate with a delicious dinner!
+
+**Dinner Location**:
+Daruma, Umhlanga
+
+This is a classified operation, so keep it under wraps!
+
+**RSVP by 15th November 2024** to confirm your participation in this thrilling mission!
+
+Get ready for an unforgettable adventure!
+
+Your Fellow Agent,
+Pavani
+
+This message will self-destruct in 10 seconds...
+I'm just kidding, can't wait to see you there!
+
+██████████████████████
+██████ END OF ████████
+█████ TRANSMISSION ███
+██████████████████████`;
+
+        let index = 0;
+        const typingDuration = 25000; // total time for typing in milliseconds
+        const interval = typingDuration / text.length; // interval between each character
+
+        function startTyping() {
+            function type() {
+                if (index < text.length) {
+                    document.getElementById('output').innerText += text[index];
+                    index++;
+                    setTimeout(type, interval);
+                }
+            }
+            type();
+        }
+    </script>
+</body>
+</html>
