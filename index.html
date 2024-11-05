@@ -246,13 +246,13 @@ I'm just kidding, can't wait to see you there!
         function submitRSVP() {
             const attendeeName = document.getElementById('attendeeName').value.trim();
             if (attendeeName) {
-                sendRSVPToZapier(attendeeName);
+                sendRSVPToGoogleSheets(attendeeName);
             } else {
                 alert("Please enter a valid name.");
             }
         }
 
-        function sendRSVPToZapier(attendeeName) {
+        function sendRSVPToGoogleSheets(attendeeName) {
             // Define RSVP details
             const rsvpDetails = {
                 name: attendeeName,
@@ -260,27 +260,22 @@ I'm just kidding, can't wait to see you there!
                 location: "Mindgame Escape Umhlanga, 16 Chartwell Drive, Umhlanga"
             };
 
-            // Fetch request to send data to Zapier Webhook
-            fetch('https://hooks.zapier.com/hooks/catch/20631282/256i2s9/', {
+            // Fetch request to send data to Google Apps Script
+            fetch('https://script.google.com/macros/s/AKfycbwrG-qzUAN2JztDWo625N2pW8I1foVVYkz6XXbY9zlqNRKN8p4ImH6Y471d1o0jppHUhQ/exec', {
                 method: 'POST',
+                mode: 'no-cors',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(rsvpDetails)
             })
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Server error: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    alert("RSVP successfully recorded. Thank you, " + attendeeName + "!");
+                    alert("RSVP successfully submitted. Thank you, " + attendeeName + "!");
                     proceedToEventDetails();
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert("There was an error submitting your RSVP. Please try again. Detailed error: " + error.message);
+                    alert("There was an error submitting your RSVP. Please try again.");
                 });
         }
 
