@@ -16,16 +16,14 @@
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
+            text-align: center;
         }
         #output {
             white-space: pre-wrap;
             overflow-wrap: break-word;
-            text-align: center;
-            display: none;
             width: 90%;
         }
         #introMessage {
-            text-align: center;
             font-size: 1.2rem;
             padding: 20px;
         }
@@ -45,13 +43,20 @@
             align-items: center;
             opacity: 0;
             animation: fadeIn 1.5s forwards;
+            margin: 20px auto;
         }
         .content p {
             margin-bottom: 20px;
             line-height: 1.6;
         }
+        .buttons-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
         button {
-            margin-top: 30px;
             padding: 15px 30px;
             cursor: pointer;
             font-size: 1rem;
@@ -64,10 +69,6 @@
         button:hover {
             background-color: #00cc00;
             transform: scale(1.1);
-        }
-        @keyframes blink {
-            from, to { background-color: transparent; }
-            50% { background-color: #00ff00; }
         }
         @keyframes fadeIn {
             0% { opacity: 0; }
@@ -105,9 +106,7 @@
         audio.onplay = function() {
             introMessage.style.display = 'none';
             audioControls.style.display = 'none';
-            output.style.display = 'flex';
-            output.style.justifyContent = 'center';
-            output.style.alignItems = 'center';
+            output.style.display = 'block';
             startTyping();
         };
 
@@ -163,6 +162,10 @@ I'm just kidding, can't wait to see you there!
         }
 
         function showRSVPButtons() {
+            // Create a container for the buttons
+            const buttonsContainer = document.createElement("div");
+            buttonsContainer.className = "buttons-container";
+
             // Create RSVP Yes button
             const rsvpYesButton = document.createElement("button");
             rsvpYesButton.innerText = "Should you choose to accept this mission - Click Here";
@@ -176,11 +179,12 @@ I'm just kidding, can't wait to see you there!
             rsvpNoButton.style.border = "2px solid #00ff00";
             rsvpNoButton.onclick = handleRSVPNo;
 
-            // Add buttons to the output section
-            output.appendChild(document.createElement("br")); // Line break
-            output.appendChild(rsvpYesButton);
-            output.appendChild(document.createTextNode(" ")); // Space between buttons
-            output.appendChild(rsvpNoButton);
+            // Add buttons to the container
+            buttonsContainer.appendChild(rsvpYesButton);
+            buttonsContainer.appendChild(rsvpNoButton);
+
+            // Add the container to the output section, ensuring it appears at the end of the message
+            output.appendChild(buttonsContainer);
         }
 
         function handleRSVPYes() {
