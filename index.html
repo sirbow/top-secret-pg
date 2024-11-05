@@ -7,37 +7,84 @@
     <style>
         body {
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background-color: black;
             color: #00ff00;
             font-family: 'Courier New', Courier, monospace;
-            display: block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
-            overflow-y: auto; /* Allow vertical scrolling */
         }
         #output {
             white-space: pre-wrap;
             overflow-wrap: break-word;
-            max-width: 100%;
-            display: block; /* Ensure the output is visible */
-        }
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 20px;
-            background-color: #00ff00;
-            animation: blink 1s step-end infinite;
+            text-align: center;
+            display: none;
+            width: 90%;
         }
         #introMessage {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             padding: 20px;
-            margin-bottom: 20px; /* Add margin for spacing */
+        }
+        #backgroundAudio {
+            display: block;
+            margin-top: 10px;
+        }
+        .content {
+            text-align: center;
+            max-width: 600px;
+            padding: 30px;
+            border: 2px solid #00ff00;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            animation: fadeIn 1.5s forwards;
+        }
+        .content p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        button {
+            margin-top: 30px;
+            padding: 15px 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: none;
+            background-color: #00ff00;
+            color: black;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        button:hover {
+            background-color: #00cc00;
+            transform: scale(1.1);
         }
         @keyframes blink {
             from, to { background-color: transparent; }
             50% { background-color: #00ff00; }
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            #introMessage {
+                font-size: 1rem;
+            }
+            button {
+                margin: 10px;
+                padding: 10px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -48,7 +95,6 @@
         Your browser does not support the audio element.
     </audio>
     <div id="output"></div>
-    <div class="cursor"></div>
 
     <script>
         const audio = document.getElementById('backgroundAudio');
@@ -59,7 +105,9 @@
         audio.onplay = function() {
             introMessage.style.display = 'none';
             audioControls.style.display = 'none';
-            output.style.display = 'block';
+            output.style.display = 'flex';
+            output.style.justifyContent = 'center';
+            output.style.alignItems = 'center';
             startTyping();
         };
 
@@ -108,10 +156,85 @@ I'm just kidding, can't wait to see you there!
                     index++;
                     setTimeout(type, interval);
                 } else {
-                    document.querySelector('.cursor').style.display = 'none'; // Hide cursor after typing
+                    showRSVPButtons(); // Show RSVP buttons after typing completes
                 }
             }
             type();
+        }
+
+        function showRSVPButtons() {
+            // Create RSVP Yes button
+            const rsvpYesButton = document.createElement("button");
+            rsvpYesButton.innerText = "Should you choose to accept this mission - Click Here";
+            rsvpYesButton.onclick = handleRSVPYes;
+
+            // Create RSVP No button
+            const rsvpNoButton = document.createElement("button");
+            rsvpNoButton.innerText = "Should you choose not to accept this mission - Click Here";
+            rsvpNoButton.style.backgroundColor = "transparent";
+            rsvpNoButton.style.color = "#00ff00";
+            rsvpNoButton.style.border = "2px solid #00ff00";
+            rsvpNoButton.onclick = handleRSVPNo;
+
+            // Add buttons to the output section
+            output.appendChild(document.createElement("br")); // Line break
+            output.appendChild(rsvpYesButton);
+            output.appendChild(document.createTextNode(" ")); // Space between buttons
+            output.appendChild(rsvpNoButton);
+        }
+
+        function handleRSVPYes() {
+            // Redirect to the mission message page (or show mission message directly)
+            output.innerHTML = `
+                <div class="content">
+                    <p>We are delighted to hear that you and your team of expert archaeologists will be coming to assist with the curse of the Forgotten Temple, we desperately need the assistance!</p>
+                    <p>While we have been doing our absolute best to investigate and solve the mystery, we have still not been able to break the curse. Our last team of explorers never returned, so we will hand the case over to you and we are hoping you will be able to solve it before it's too late!</p>
+                    <p>We cannot wait to see you on the 07-Dec-2024 at 03:15 PM. We will be expecting 7 explorers at the following address: 2nd Floor, Unit 205, Granada Square, 16 Chartwell Drive, Umhlanga, Durban.</p>
+                    <p>Inside intelligence indicates that the Mayan King may be aware that expert archaeologists are en route, and may try to delay you. For this reason, please make sure you arrive 15 minutes before your adventure start time, so we can give you the low-down and to ensure the exploration starts on time. If you are late, it sadly may mean that your exploration time is limited.</p>
+                    <p>You will find parking for your horse and carriage on the side of the building, with entrances in both Ocean Way and Lagoon Drive. From there you can take the strange metal box up to level 2 (we are unsure as to how this contraption works) and we are the first entrance to your right.</p>
+                    <p>If you opt to arrive on foot instead of horse and carriage, the lifts are next to Woolworths. Woolworths is just behind Little Havana's on Chartwell Drive.</p>
+                    <p>We will be waiting in great anticipation - the world needs you to break the curse before it's too late!</p>
+
+                    <button onclick="proceedToEventRules()">Proceed to Event Rules</button>
+                </div>
+            `;
+        }
+
+        function handleRSVPNo() {
+            // Display message for declining
+            output.innerHTML = `
+                <div class="content">
+                    <p>Thank you for letting us know, we will miss you, but understand the mission you are working on currently is also important. Hope to catch you on the next mission.</p>
+                </div>
+            `;
+        }
+
+        function proceedToEventRules() {
+            // Display centered event rules and waiver button
+            output.innerHTML = `
+                <div class="content">
+                    <h3>Event Rules</h3>
+                    <p><strong>BE ON TIME</strong></p>
+                    <p>We run games back to back, and require all players to arrive on time. If you are late it will limit your game time. Please arrive 15 minutes before your game start time, so we can give you the low-down on how the game works and to give you a game briefing. Please also allow for 15 minutes after your game for photos and to collect your belongings. The entire experience lasts around 1 hour 30 minutes.</p>
+
+                    <p><strong>Safety</strong></p>
+                    <p>We do not allow cellphones or cameras into the rooms. We do provide free safe and secure lockers to store your belongings. Safe and secure parking is provided in Granada Square, with entrances into the complex in both Ocean Way and Lagoon Drives. Once parked, take the lift to the 2nd floor.</p>
+
+                    <p><strong>BATHROOMS</strong></p>
+                    <p>We do have bathrooms on site if needed!</p>
+
+                    <button onclick="proceedToWaiver()">Proceed to Waiver</button>
+                </div>
+            `;
+        }
+
+        function proceedToWaiver() {
+            output.innerHTML = `
+                <div class="content">
+                    <p>Please click the link below to sign the waiver:</p>
+                    <a href="https://t2m.io/JaSuUx0H" target="_blank" style="color: #00ff00;">Sign Waiver</a>
+                </div>
+            `;
         }
     </script>
 </body>
