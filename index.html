@@ -253,15 +253,13 @@ I'm just kidding, can't wait to see you there!
         }
 
         function sendRSVPToGoogleSheets(attendeeName) {
-            // Define RSVP details
             const rsvpDetails = {
                 name: attendeeName,
                 date: "7th December 2024",
                 location: "Mindgame Escape Umhlanga, 16 Chartwell Drive, Umhlanga"
             };
 
-            // Fetch request to send data to Google Apps Script
-            fetch('https://script.google.com/macros/s/AKfycbwrG-qzUAN2JztDWo625N2pW8I1foVVYkz6XXbY9zlqNRKN8p4ImH6Y471d1o0jppHUhQ/exec', {
+            fetch('https://script.google.com/macros/s/YOUR_GOOGLE_APPS_SCRIPT_URL/exec', {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: {
@@ -269,7 +267,7 @@ I'm just kidding, can't wait to see you there!
                 },
                 body: JSON.stringify(rsvpDetails)
             })
-                .then(response => {
+                .then(() => {
                     alert("RSVP successfully submitted. Thank you, " + attendeeName + "!");
                     proceedToEventDetails();
                 })
@@ -283,6 +281,12 @@ I'm just kidding, can't wait to see you there!
             output.innerHTML = `
                 <div class="content">
                     <p>We are delighted to hear that you and your team of expert archaeologists will be coming to assist with the curse of the Forgotten Temple, we desperately need the assistance!</p>
+                    <p>While we have been doing our absolute best to investigate and solve the mystery, we have still not been able to break the curse. Our last team of explorers never returned, so we will hand the case over to you and we are hoping you will be able to solve it before it's too late!</p>
+                    <p>We cannot wait to see you on the 07-Dec-2024 at 03:15 PM. We will be expecting 7 explorers at the following address: 2nd Floor, Unit 205, Granada Square, 16 Chartwell Drive, Umhlanga, Durban.</p>
+                    <p>Inside intelligence indicates that the Mayan King may be aware that expert archaeologists are en route, and may try to delay you. For this reason, please make sure you arrive 15 minutes before your adventure start time, so we can give you the low-down and to ensure the exploration starts on time. If you are late, it sadly may mean that your exploration time is limited.</p>
+                    <p>You will find parking for your horse and carriage on the side of the building, with entrances in both Ocean Way and Lagoon Drive. From there you can take the strange metal box up to level 2 (we are unsure as to how this contraption works) and we are the first entrance to your right.</p>
+                    <p>If you opt to arrive on foot instead of horse and carriage, the lifts are next to Woolworths. Woolworths is just behind Little Havana's on Chartwell Drive.</p>
+                    <p>We will be waiting in great anticipation - the world needs you to break the curse before it's too late!</p>
                     <button onclick="proceedToEventRules()">Proceed to Event Rules</button>
                 </div>
             `;
@@ -293,7 +297,11 @@ I'm just kidding, can't wait to see you there!
                 <div class="content">
                     <h3>Event Rules</h3>
                     <p><strong>BE ON TIME</strong></p>
-                    <p>We run games back to back, and require all players to arrive on time. If you are late it will limit your game time. Please arrive 15 minutes before your game start time...</p>
+                    <p>We run games back to back, and require all players to arrive on time. If you are late it will limit your game time. Please arrive 15 minutes before your game start time, so we can give you the low-down on how the game works and to give you a game briefing. Please also allow for 15 minutes after your game for photos and to collect your belongings. The entire experience lasts around 1 hour 30 minutes.</p>
+                    <p><strong>SAFETY</strong></p>
+                    <p>We do not allow cellphones or cameras into the rooms. We do provide free safe and secure lockers to store your belongings. Safe and secure parking is provided in Granada Square, with entrances into the complex in both Ocean Way and Lagoon Drives. Once parked, take the lift to the 2nd floor.</p>
+                    <p><strong>BATHROOMS</strong></p>
+                    <p>We do have bathrooms on site if needed!</p>
                     <button onclick="proceedToWaiver()">Proceed to Waiver</button>
                 </div>
             `;
@@ -302,7 +310,7 @@ I'm just kidding, can't wait to see you there!
         function proceedToWaiver() {
             output.innerHTML = `
                 <div class="content">
-                    <p>Please click the link below to sign the waiver:</p>
+                    <p>IMIPORTANT: We need to ensure all detectives are protected! For this reason please send the following to your team members to complete their indemnity form before arrival to your adventure:</p>
                     <a href="https://t2m.io/JaSuUx0H" target="_blank" style="color: #00ff00;">Sign Waiver</a>
                 </div>
             `;
@@ -311,3 +319,5 @@ I'm just kidding, can't wait to see you there!
 </body>
 
 </html>
+
+
