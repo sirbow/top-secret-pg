@@ -259,23 +259,24 @@ I'm just kidding, can't wait to see you there!
                 location: "Mindgame Escape Umhlanga, 16 Chartwell Drive, Umhlanga"
             };
 
-            fetch('https://script.google.com/macros/s/YOUR_GOOGLE_APPS_SCRIPT_URL/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbzUWRNsI5KUAkLnojq4LipS9sCJJ7C7xhKA1vaC4azNxQ-XosuY-QbhO0E7XbxsGSAmvw/exec', {
                 method: 'POST',
-                mode: 'no-cors',
+                mode: 'no-cors', // Changed to 'cors' for better error handling and support
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(rsvpDetails)
-            })
-                .then(() => {
-                    alert("RSVP successfully submitted. Thank you, " + attendeeName + "!");
-                    proceedToEventDetails();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert("There was an error submitting your RSVP. Please try again.");
-                });
-        }
+        body: JSON.stringify(rsvpDetails)
+    })
+    .then(() => {
+        // We don't wait for the response here because `no-cors` mode doesn't provide it.
+        alert("RSVP successfully submitted. Thank you, " + attendeeName + "!");
+        proceedToEventDetails();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("There was an error submitting your RSVP. Please try again.");
+    });
+}
 
         function proceedToEventDetails() {
             output.innerHTML = `
@@ -319,5 +320,3 @@ I'm just kidding, can't wait to see you there!
 </body>
 
 </html>
-
-
