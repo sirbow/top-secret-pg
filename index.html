@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Agent Echo's Mission</title>
+    <title>Mission: Forgotten Temple</title>
     <style>
         body {
             margin: 0;
@@ -17,19 +17,24 @@
             min-height: 100vh;
             box-sizing: border-box;
             text-align: center;
-        }
-        #output {
-            white-space: pre-wrap;
-            overflow-wrap: break-word;
-            width: 90%;
+            flex-direction: column;
         }
         #introMessage {
+            text-align: center;
             font-size: 1.2rem;
             padding: 20px;
         }
         #backgroundAudio {
-            display: block;
             margin-top: 10px;
+        }
+        #output {
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            text-align: center;
+            display: none;
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto;
         }
         .content {
             text-align: center;
@@ -41,13 +46,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            opacity: 0;
             animation: fadeIn 1.5s forwards;
             margin: 20px auto;
-        }
-        .content p {
-            margin-bottom: 20px;
-            line-height: 1.6;
         }
         .buttons-container {
             margin-top: 20px;
@@ -101,11 +101,10 @@
         const audio = document.getElementById('backgroundAudio');
         const introMessage = document.getElementById('introMessage');
         const output = document.getElementById('output');
-        const audioControls = document.getElementById('backgroundAudio');
 
         audio.onplay = function() {
             introMessage.style.display = 'none';
-            audioControls.style.display = 'none';
+            audio.style.display = 'none';
             output.style.display = 'block';
             startTyping();
         };
@@ -162,16 +161,13 @@ I'm just kidding, can't wait to see you there!
         }
 
         function showRSVPButtons() {
-            // Create a container for the buttons
             const buttonsContainer = document.createElement("div");
             buttonsContainer.className = "buttons-container";
 
-            // Create RSVP Yes button
             const rsvpYesButton = document.createElement("button");
             rsvpYesButton.innerText = "Should you choose to accept this mission - Click Here";
             rsvpYesButton.onclick = handleRSVPYes;
 
-            // Create RSVP No button
             const rsvpNoButton = document.createElement("button");
             rsvpNoButton.innerText = "Should you choose not to accept this mission - Click Here";
             rsvpNoButton.style.backgroundColor = "transparent";
@@ -179,33 +175,21 @@ I'm just kidding, can't wait to see you there!
             rsvpNoButton.style.border = "2px solid #00ff00";
             rsvpNoButton.onclick = handleRSVPNo;
 
-            // Add buttons to the container
             buttonsContainer.appendChild(rsvpYesButton);
             buttonsContainer.appendChild(rsvpNoButton);
 
-            // Add the container to the output section, ensuring it appears at the end of the message
+            output.appendChild(document.createElement("br"));
             output.appendChild(buttonsContainer);
         }
 
         function handleRSVPYes() {
-            // Redirect to the mission message page (or show mission message directly)
-            output.innerHTML = `
-                <div class="content">
-                    <p>We are delighted to hear that you and your team of expert archaeologists will be coming to assist with the curse of the Forgotten Temple, we desperately need the assistance!</p>
-                    <p>While we have been doing our absolute best to investigate and solve the mystery, we have still not been able to break the curse. Our last team of explorers never returned, so we will hand the case over to you and we are hoping you will be able to solve it before it's too late!</p>
-                    <p>We cannot wait to see you on the 07-Dec-2024 at 03:15 PM. We will be expecting 7 explorers at the following address: 2nd Floor, Unit 205, Granada Square, 16 Chartwell Drive, Umhlanga, Durban.</p>
-                    <p>Inside intelligence indicates that the Mayan King may be aware that expert archaeologists are en route, and may try to delay you. For this reason, please make sure you arrive 15 minutes before your adventure start time, so we can give you the low-down and to ensure the exploration starts on time. If you are late, it sadly may mean that your exploration time is limited.</p>
-                    <p>You will find parking for your horse and carriage on the side of the building, with entrances in both Ocean Way and Lagoon Drive. From there you can take the strange metal box up to level 2 (we are unsure as to how this contraption works) and we are the first entrance to your right.</p>
-                    <p>If you opt to arrive on foot instead of horse and carriage, the lifts are next to Woolworths. Woolworths is just behind Little Havana's on Chartwell Drive.</p>
-                    <p>We will be waiting in great anticipation - the world needs you to break the curse before it's too late!</p>
-
-                    <button onclick="proceedToEventRules()">Proceed to Event Rules</button>
-                </div>
-            `;
+            const attendeeName = prompt("Please enter the attendee's name:");
+            if (attendeeName) {
+                sendRSVPToGoogleSheets(attendeeName);
+            }
         }
 
         function handleRSVPNo() {
-            // Display message for declining
             output.innerHTML = `
                 <div class="content">
                     <p>Thank you for letting us know, we will miss you, but understand the mission you are working on currently is also important. Hope to catch you on the next mission.</p>
@@ -213,20 +197,53 @@ I'm just kidding, can't wait to see you there!
             `;
         }
 
+        function sendRSVPToGoogleSheets(attendeeName) {
+            // Define RSVP details
+            const rsvpDetails = {
+                name: attendeeName,
+                date: "7th December 2024",
+                location: "Mindgame Escape Umhlanga, 16 Chartwell Drive, Umhlanga"
+            };
+
+            // Fetch request to send data to Google Sheets via Google Apps Script
+            fetch('https://script.google.com/macros/s/AKfycbxcsN2R24kG-sHO9aOoBi9vvI5UWsd7Lu1PVGi5V0qXHjSJ_ey2_k59O5oEpCro2YsYGQ/exec', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(rsvpDetails)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                alert("RSVP successfully recorded: " + data);
+                proceedToEventDetails();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("There was an error submitting your RSVP. Please try again. Detailed error: " + error.message);
+            });
+        }
+
+        function proceedToEventDetails() {
+            output.innerHTML = `
+                <div class="content">
+                    <p>We are delighted to hear that you and your team of expert archaeologists will be coming to assist with the curse of the Forgotten Temple, we desperately need the assistance!</p>
+                    <button onclick="proceedToEventRules()">Proceed to Event Rules</button>
+                </div>
+            `;
+        }
+
         function proceedToEventRules() {
-            // Display centered event rules and waiver button
             output.innerHTML = `
                 <div class="content">
                     <h3>Event Rules</h3>
                     <p><strong>BE ON TIME</strong></p>
-                    <p>We run games back to back, and require all players to arrive on time. If you are late it will limit your game time. Please arrive 15 minutes before your game start time, so we can give you the low-down on how the game works and to give you a game briefing. Please also allow for 15 minutes after your game for photos and to collect your belongings. The entire experience lasts around 1 hour 30 minutes.</p>
-
-                    <p><strong>Safety</strong></p>
-                    <p>We do not allow cellphones or cameras into the rooms. We do provide free safe and secure lockers to store your belongings. Safe and secure parking is provided in Granada Square, with entrances into the complex in both Ocean Way and Lagoon Drives. Once parked, take the lift to the 2nd floor.</p>
-
-                    <p><strong>BATHROOMS</strong></p>
-                    <p>We do have bathrooms on site if needed!</p>
-
+                    <p>We run games back to back, and require all players to arrive on time. If you are late it will limit your game time. Please arrive 15 minutes before your game start time...</p>
                     <button onclick="proceedToWaiver()">Proceed to Waiver</button>
                 </div>
             `;
